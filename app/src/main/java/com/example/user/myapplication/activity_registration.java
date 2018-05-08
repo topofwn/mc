@@ -91,38 +91,28 @@ public class activity_registration extends Activity {
         Errorfield.setVisibility(View.GONE);
         if (edtName.getText().toString().equals("") == true) {
             flagName = false;
-
         } else {
             flagName = true;
-
         }
         if (edtPhone.getText().toString().equals("") == true) {
             flagPhone = false;
-
         } else {
             flagPhone = true;
-
         }
         if (edtEmail.getText().toString().equals("") == true) {
             flagEmail = false;
-
         } else {
             flagEmail = true;
-
         }
         if (edtPass.getText().toString().equals("") == true) {
             flagPass = false;
-
         } else {
             flagPass = true;
-
         }
         if (edtConfirmPass.getText().toString().equals("") == true) {
             flagConfirm = false;
-
         } else {
             flagConfirm = true;
-
         }
 
         if ((flagName == true) && (flagPhone == true) && (flagEmail == true) && (flagPass == true)) {
