@@ -19,6 +19,8 @@ public class ActivityOrder extends Activity {
             public void onClick(View v) {
                 startActivity(new Intent(new Intent(ActivityOrder.this, PromotionActivity.class)));
             }
+
+
         });
     }
 }

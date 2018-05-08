@@ -147,7 +147,6 @@ public class activity_registration extends Activity {
                                         e.printStackTrace();
                                     }
                                 }
-
                                 @Override
                                 public void onError(ANError error) {
                                     if (error.getErrorCode() != 0) {
