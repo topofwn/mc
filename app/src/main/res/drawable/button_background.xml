@@ -4,6 +4,6 @@
            android:drawable="@drawable/bg_red_background_radient_white_line_corner">
     </item>
     <item android:state_pressed="false"
-        android:drawable="@drawable/bg_gradient_white_line_corner"></item>
+        android:drawable="@drawable/bg_button_red"></item>
 
 </selector>
