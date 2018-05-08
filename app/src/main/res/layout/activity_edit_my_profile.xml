@@ -36,50 +36,46 @@
             android:textStyle="bold"
            />
     </LinearLayout>
-    <android.support.constraint.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorBlack"
         android:id="@+id/AvatarLayout"
+        android:orientation="horizontal"
         >
-        <ImageView
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="7"
+            ></RelativeLayout>
+
+        <ImageButton
             android:id="@+id/ImgAvatar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="160dp"
-            app:layout_constraintRight_toLeftOf="@+id/btnDone"
-            android:background="@drawable/bg_profile_avatar"
+            android:layout_width="30dp"
+            android:layout_height="70dp"
+            android:gravity="center"
+            android:layout_marginRight="60dp"
+            android:layout_weight="1"
 
-            />
-        <Button
-            android:layout_width="35dp"
-            android:id="@+id/btnChangeAvatar"
-            android:layout_height="35dp"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/ic_add_white_18dp"
-            android:layout_marginRight="169dp"
-            app:layout_constraintRight_toLeftOf="@+id/btnDone"
-            app:layout_constraintTop_toTopOf="parent"
+            android:background="@drawable/bg_profile_avatar"
             />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:textSize="15dp"
             android:textStyle="bold"
-            android:padding="1dp"
-            android:layout_marginRight="15dp"
+            android:layout_weight="0"
+            android:layout_marginRight="10dp"
+            android:padding="5dp"
             android:id="@+id/btnDone"
             android:textColor="@drawable/text_background"
+            android:textAllCaps="false"
             android:text="Done"
             android:background="@drawable/button_background"
-            android:layout_gravity="right"
-            app:layout_constraintRight_toRightOf="parent"
-
-
+            android:gravity="center"
             />
-    </android.support.constraint.ConstraintLayout>
+    </LinearLayout>
    <LinearLayout
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
@@ -100,7 +96,7 @@
            android:layout_width="match_parent"
            android:layout_height="30dp"
            android:padding="5dp"
-           android:background="@drawable/bg_gradient_gray_no_stroke"
+           android:background="#bbb"
            android:inputType="text"
            android:singleLine="true"
            android:layout_marginTop="5dp"
@@ -122,7 +118,7 @@
            android:layout_height="30dp"
            android:padding="5dp"
            android:background="@drawable/bg_gradient_gray_no_stroke"
-           android:inputType="numberSigned|number"
+           android:inputType="textPhonetic"
            android:singleLine="true"
            android:layout_marginTop="5dp"
            android:imeOptions="actionNext"
@@ -183,6 +179,7 @@
                android:layout_weight="2"
                android:textSize="18dp"
                android:text="Change"
+               android:id="@+id/btnChange"
                android:padding="3dp"
                android:background="@drawable/button_background"
                android:textColor="@drawable/text_background"
