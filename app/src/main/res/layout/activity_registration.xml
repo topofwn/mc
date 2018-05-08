@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/RegistrationLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/toolBarRegistration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#000"
+        android:orientation="horizontal"
+       >
+        <ImageButton
+            android:id="@+id/btnImgBackR"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+
+            android:layout_gravity="center_vertical"
+            android:background="#000"
+            android:src="@drawable/ic_back_white" />
+        <TextView
+            android:id="@+id/txtRegistration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="registration"
+            android:gravity="center"
+            android:textAllCaps="true"
+            android:textColor="#ffff"
+            android:layout_weight="2"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ErrorField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:background="#f1a59b"
+        android:orientation="vertical"
+        android:padding="5dp"
+        android:visibility="gone">
+        <TextView
+            android:id="@+id/txtErrorMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Error message"
+            android:textColor="#000"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+        <LinearLayout
+            android:id="@+id/ErrorZone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="2dp"
+                android:text="*"
+                android:id="@+id/txtCharacter"
+                android:textColor="#f30000"
+                android:textSize="8dp"
+                android:visibility="visible"/>
+            <TextView
+                android:id="@+id/txtError"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#000"
+                android:textSize="16dp" />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/FillView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/NameLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/txtName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Full Name"
+                android:textColor="#000"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                android:typeface="monospace" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:text="*"
+                android:textColor="#f30000"
+                android:textSize="8dp" />
+        </LinearLayout>
+        <EditText
+            android:id="@+id/edtFullnameR"
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:layout_marginTop="5dp"
+            android:padding="3dp"
+            android:inputType="text"
+            android:singleLine="true"
+            android:imeOptions="actionNext"
+            android:background="@drawable/bg_gradient_gray_no_stroke" />
+         <LinearLayout
+            android:id="@+id/PhoneLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/txtPhoneNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Phone Number"
+                android:textColor="#000"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                android:typeface="monospace" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="*"
+                android:layout_marginLeft="2dp"
+                android:textColor="#f30000"
+                android:textSize="8dp" />
+        </LinearLayout>
+        <EditText
+            android:id="@+id/edtPhonenumberR"
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:inputType="text"
+            android:padding="3dp"
+            android:singleLine="true"
+            android:imeOptions="actionNext"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/bg_gradient_gray_no_stroke" />
+        <LinearLayout
+            android:id="@+id/EmailLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/txtEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Email"
+                android:textColor="#000"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                android:typeface="monospace" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:text="*"
+                android:textColor="#f30000"
+                android:textSize="8dp" />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/edtEmailR"
+            android:layout_width="match_parent"
+            android:inputType="text"
+            android:singleLine="true"
+            android:padding="3dp"
+            android:layout_height="25dp"
+            android:imeOptions="actionNext"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/bg_gradient_gray_no_stroke" />
+        <LinearLayout
+            android:id="@+id/PasswordLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/txtPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Password"
+                android:textColor="#000"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                android:typeface="monospace" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="*"
+                android:layout_marginLeft="2dp"
+                android:textColor="#f30000"
+                android:textSize="8dp" />
+        </LinearLayout>
+           <EditText
+                android:id="@+id/edtPasswordR"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:singleLine="true"
+                android:padding="3dp"
+                android:imeOptions="actionNext"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/bg_gradient_gray_no_stroke"
+                android:inputType="textPassword"
+                />
+
+        <LinearLayout
+            android:id="@+id/ConfirmPasswordlayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/txtConfirmPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Confirm password"
+                android:textColor="#000"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                android:typeface="monospace" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="*"
+                android:layout_marginLeft="2dp"
+                android:textColor="#f30000"
+                android:textSize="8dp" />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/edtConfirmpasswordR"
+            android:layout_width="match_parent"
+            android:inputType="textPassword"
+            android:singleLine="true"
+            android:padding="3dp"
+            android:layout_height="25dp"
+            android:imeOptions="actionNext"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/bg_gradient_gray_no_stroke" />
+        <Button
+            android:id="@+id/btnRegisterR"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="#f30000"
+            android:gravity="center"
+            android:text="Register an account"
+            android:textAllCaps="true"
+            android:textColor="@drawable/text_background"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</LinearLayout>

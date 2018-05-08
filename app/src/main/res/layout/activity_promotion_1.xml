@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:visibility="visible"
+    android:layout_margin="10dp"
+    android:background="#00ffffff"
+    android:id="@+id/Promotion">
+<ImageButton
+    android:layout_width="40dp"
+    android:layout_height="40dp"
+    android:layout_marginTop="15dp"
+    android:layout_marginLeft="15dp"
+    android:background="#00ffffff"
+    android:src="@drawable/ic_back_red"
+    android:id="@+id/btnBack"
+
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    />
+
+    <LinearLayout
+        android:id="@+id/ApplySuccess"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/bg_gradient_red_line_corner"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnBack">
+
+        <LinearLayout
+            android:id="@+id/FirstContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/SelectedPromotionA"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:gravity="center_vertical"
+                android:text="Your Selected Promotion:"
+                android:textColor="#000" />
+
+            <TextView
+                android:id="@+id/SelectPromotionB"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:textColor="#e30000" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/SecondContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/ExpiredDateA"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="10dp"
+                android:text="Expired Date:"
+                android:textColor="#000" />
+
+            <TextView
+                android:id="@+id/ExpiredDateB"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:textColor="#e30000" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txtSummary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:textColor="#000" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/EnterPromotion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ApplySuccess">
+
+        <TextView
+            android:id="@+id/txtYourPromotion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:text="Your Promotion"
+            android:textColor="#000"
+            android:textSize="15dp" />
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/WrapEdtPromotion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtYourPromotion"
+            android:layout_marginTop="10dp">
+
+            <EditText
+                android:id="@+id/EdtPromotion"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_marginBottom="0dp"
+                android:layout_marginLeft="0dp"
+                android:inputType="textCapCharacters"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/bg_gradient_gray_no_stroke"
+                android:imeOptions="actionSearch"
+
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/btnApply" />
+
+            <Button
+                android:id="@+id/btnApply"
+                android:layout_width="50dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="0dp"
+                android:background="@drawable/bg_button_red"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="Apply"
+                android:textAllCaps="false"
+                android:textColor="#ffff"
+                app:layout_constraintLeft_toRightOf="@id/EdtPromotion"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </android.support.constraint.ConstraintLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:visibility="invisible"
+        android:id="@+id/ErrorLayout"
+        android:layout_marginTop="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+
+        app:layout_constraintTop_toBottomOf="@+id/EnterPromotion">
+
+        <ImageView
+            android:id="@+id/ImgRedInfo"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="10dp"
+
+            android:src="@drawable/ic_red_info" />
+
+        <TextView
+            android:id="@+id/txtError"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:textColor="#000" />
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
