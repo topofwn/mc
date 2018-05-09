@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context="com.example.user.myapplication.MyProfileActivity">
     <LinearLayout
         android:layout_width="match_parent"
@@ -67,12 +66,11 @@
 
     <ImageView
         android:id="@+id/ImgAvatarPE"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_below="@+id/MyProfileToolbar"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center"
-        android:layout_weight="1"
         android:background="@drawable/bg_profile_avatar"
         android:gravity="center" />
 
@@ -141,7 +139,7 @@
             android:layout_weight="1"
             android:padding="15dp"
             android:id="@+id/PhoneNumberLayoutPE"
-            android:background="#bbb"
+            android:background="#bbbb"
             >
             <TextView
                 android:layout_width="wrap_content"
@@ -168,7 +166,7 @@
             android:layout_weight="1"
             android:padding="15dp"
             android:id="@+id/EmailLayoutPE"
-            android:background="#bbb"
+            android:background="#bbbb"
             >
             <TextView
                 android:layout_width="wrap_content"
@@ -195,7 +193,7 @@
             android:layout_weight="1"
             android:padding="15dp"
             android:id="@+id/PasswordLayoutPE"
-            android:background="#bbb"
+            android:background="#bbbb"
             >
             <TextView
                 android:layout_width="wrap_content"
