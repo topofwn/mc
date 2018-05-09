@@ -12,7 +12,7 @@
         android:screenOrientation="portrait"
         android:supportsRtl="false"
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
-        <activity android:name=".EditMyProfileActivity">
+        <activity android:name=".ActiviyWelcome">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,8 +25,8 @@
         <activity android:name=".PromotionActivity" />
         <activity android:name=".activity_registration" />
         <activity android:name=".activity_login" />
-        <activity android:name=".ActiviyWelcome" />
         <activity android:name=".MyProfileActivity" />
+        <activity android:name=".EditMyProfileActivity" />
         <activity android:name=".ChangePasswordActivity"></activity>
     </application>
 

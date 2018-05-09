@@ -66,8 +66,25 @@ public class activity_login extends AppCompatActivity {
                                                     Toast.makeText(getApplicationContext(),response.getString("message").toString(), Toast.LENGTH_SHORT).show();
                                                     if (response.getInt("status") == 400){
                                                         Log.d(TAG,response.getString("message").toString());
-                                                    }else {
-                                                        startActivity(new Intent(activity_login.this, activity_choose.class));
+                                                    }else if (response.getInt("status") == 200){
+                                                        JSONObject json = new JSONObject();
+                                                        json = response.getJSONObject("data");
+
+                                                        Account account = new Account();
+                                                        account.email = json.optString("email");
+                                                        account.id = json.optInt("id");
+                                                        account.user_type = json.optString("user_type");
+                                                        account.full_name = json.optString("full_name");
+                                                        account.phone_number = json.optString("phone_number");
+                                                        account.avatar = json.optString("avatar");
+                                                        account.token = json.optString("token");
+                                                        account.total_order = json.optInt("total_order");
+                                                        Intent i = new Intent(activity_login.this, MyProfileActivity.class);
+                                                        Bundle bundle = new Bundle();
+                                                        bundle.putSerializable("account",account);
+                                                        bundle.putCharSequence("pass",login.password);
+                                                        i.putExtras(bundle);
+                                                        startActivity(i);
                                                     }
                                                 } catch (JSONException e) {
                                                     e.printStackTrace();

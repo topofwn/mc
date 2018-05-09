@@ -6,30 +6,100 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONObjectRequestListener;
+import com.rx2androidnetworking.Rx2AndroidNetworking;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
+import static com.example.user.myapplication.activity_registration.SECRET_KEY;
+import static com.example.user.myapplication.activity_registration.SERVER_URL;
+
 public class EditMyProfileActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST =71 ;
-    private Uri filePath;
+    private static final String TAG = "mc" ;
+    private Uri filePath =null;
     private ImageButton ImgAvatar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent i = getIntent();
+        Bundle b = new Bundle();
+
         setContentView(R.layout.activity_edit_my_profile);
         Button btnDone = (Button) findViewById(R.id.btnDone);
         Button btnChange = (Button) findViewById(R.id.btnChange);
         Button btnCancel = (Button) findViewById(R.id.btnCancel);
+        EditText edtName = (EditText) findViewById(R.id.edtNameP);
+        EditText edtPhone = (EditText) findViewById(R.id.edtPhoneP);
+        EditText edtMail = (EditText) findViewById(R.id.edtEmailP);
+        EditText edtPass = (EditText) findViewById(R.id.edtPasswordP);
+        Account profile = (Account) i.getSerializableExtra("inform");
 
+        edtName.setText(profile.full_name);
+        edtPhone.setText(profile.phone_number);
+        edtMail.setText(profile.email);
+        edtPass.setText(b.getCharSequence("inform_pass"));
          ImgAvatar = (ImageButton)findViewById(R.id.ImgAvatar);
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(EditMyProfileActivity.this, MyProfileActivity.class));
+                Account edit = profile;
+                edit.full_name = edtName.getText().toString();
+                edit.phone_number = edtPhone.getText().toString();
+                EditProfileAsyncTask editprofileAsynctask = new EditProfileAsyncTask(EditMyProfileActivity.this);
+                editprofileAsynctask.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Rx2AndroidNetworking.put(SERVER_URL + "/api/mcf/v1/drinker/"+String.valueOf(profile.id))
+                                    .addApplicationJsonBody(edit)
+                                  //  .addHeaders(new APIHeader(SecurityUtils.convertSha256(SECRET_KEY + login.username + login.password)))
+                                    .build()
+                                    .getAsJSONObject(new JSONObjectRequestListener() {
+                                        @Override
+                                        public void onResponse(JSONObject response) {
+                                            try {
+                                                Toast.makeText(getApplicationContext(),response.getString("message").toString(), Toast.LENGTH_SHORT).show();
+                                                if (response.getInt("status") == 400){
+                                                    Log.d(TAG,response.getString("message").toString());
+                                                }else if (response.getInt("status") == 200){
+                                                    JSONObject json = new JSONObject();
+                                                    json = response.getJSONObject("data");
+
+                                                }
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                        @Override
+                                        public void onError(ANError error) {
+                                            if (error.getErrorCode() != 0) {
+                                                Log.d(TAG, "onError errorCode : " + error.getErrorCode());
+                                                Log.d(TAG, "onError errorBody : " + error.getErrorBody());
+                                                Log.d(TAG, "onError errorDetail : " + error.getErrorDetail());
+                                            } else {
+                                                Log.d(TAG, "onError errorDetail : " + error.getErrorDetail());
+                                            }
+                                        }
+                                    });
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                });
             }
         });
         btnChange.setOnClickListener(new View.OnClickListener() {
