@@ -1,5 +1,6 @@
 package com.example.user.myapplication;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -31,6 +32,7 @@ public class EditMyProfileActivity extends AppCompatActivity {
     private static final String TAG = "mc" ;
     private Uri filePath =null;
     private ImageButton ImgAvatar;
+    public EditText edtPass;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,13 +46,13 @@ public class EditMyProfileActivity extends AppCompatActivity {
         EditText edtName = (EditText) findViewById(R.id.edtNameP);
         EditText edtPhone = (EditText) findViewById(R.id.edtPhoneP);
         EditText edtMail = (EditText) findViewById(R.id.edtEmailP);
-        EditText edtPass = (EditText) findViewById(R.id.edtPasswordP);
+        edtPass = (EditText) findViewById(R.id.edtPasswordP);
         Account profile = (Account) i.getSerializableExtra("inform");
-
+        String s = (String) b.getCharSequence("inform_pass");
         edtName.setText(profile.full_name);
         edtPhone.setText(profile.phone_number);
         edtMail.setText(profile.email);
-        edtPass.setText(b.getCharSequence("inform_pass"));
+        edtPass.setText(s);
          ImgAvatar = (ImageButton)findViewById(R.id.ImgAvatar);
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,41 +64,47 @@ public class EditMyProfileActivity extends AppCompatActivity {
                 editprofileAsynctask.execute(new Runnable() {
                     @Override
                     public void run() {
-                        try {
-                            Rx2AndroidNetworking.put(SERVER_URL + "/api/mcf/v1/drinker/"+String.valueOf(profile.id))
-                                    .addApplicationJsonBody(edit)
-                                  //  .addHeaders(new APIHeader(SecurityUtils.convertSha256(SECRET_KEY + login.username + login.password)))
-                                    .build()
-                                    .getAsJSONObject(new JSONObjectRequestListener() {
-                                        @Override
-                                        public void onResponse(JSONObject response) {
-                                            try {
-                                                Toast.makeText(getApplicationContext(),response.getString("message").toString(), Toast.LENGTH_SHORT).show();
-                                                if (response.getInt("status") == 400){
-                                                    Log.d(TAG,response.getString("message").toString());
-                                                }else if (response.getInt("status") == 200){
-                                                    JSONObject json = new JSONObject();
-                                                    json = response.getJSONObject("data");
-
-                                                }
-                                            } catch (JSONException e) {
-                                                e.printStackTrace();
+                        Rx2AndroidNetworking.put(SERVER_URL + "/api/mcf/v1/drinker/"+String.valueOf(profile.id))
+                                .addApplicationJsonBody(edit)
+                               .addHeaders(new APIHeader(SecurityUtils.convertSha256(SECRET_KEY + profile.full_name +s )))
+                                .build()
+                                .getAsJSONObject(new JSONObjectRequestListener() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        try {
+                                            Toast.makeText(getApplicationContext(),response.getString("message").toString(), Toast.LENGTH_SHORT).show();
+                                            if (response.getInt("status") == 400){
+                                                Log.d(TAG,response.getString("message").toString());
+                                            }else if (response.getInt("status") == 200){
+                                                JSONObject json = new JSONObject();
+                                                json = response.getJSONObject("data");
+                                                Account result =profile;
+                                                result.full_name = json.optString("full_name");
+                                                result.phone_number = json.optString("phone_number");
+                                                result.avatar = json.optString("avatar");
+                                                Intent returnIntent = new Intent();
+                                                Bundle bundle = new Bundle();
+                                                bundle.putSerializable("result",result);
+                                                bundle.putCharSequence("result_pass",edtPass.getText().toString());
+                                                i.putExtras(bundle);
+                                                setResult(Activity.RESULT_OK,returnIntent);
+                                                finish();
                                             }
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
                                         }
-                                        @Override
-                                        public void onError(ANError error) {
-                                            if (error.getErrorCode() != 0) {
-                                                Log.d(TAG, "onError errorCode : " + error.getErrorCode());
-                                                Log.d(TAG, "onError errorBody : " + error.getErrorBody());
-                                                Log.d(TAG, "onError errorDetail : " + error.getErrorDetail());
-                                            } else {
-                                                Log.d(TAG, "onError errorDetail : " + error.getErrorDetail());
-                                            }
+                                    }
+                                    @Override
+                                    public void onError(ANError error) {
+                                        if (error.getErrorCode() != 0) {
+                                            Log.d(TAG, "onError errorCode : " + error.getErrorCode());
+                                            Log.d(TAG, "onError errorBody : " + error.getErrorBody());
+                                            Log.d(TAG, "onError errorDetail : " + error.getErrorDetail());
+                                        } else {
+                                            Log.d(TAG, "onError errorDetail : " + error.getErrorDetail());
                                         }
-                                    });
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                                    }
+                                });
                     }
 
                 });
@@ -105,7 +113,8 @@ public class EditMyProfileActivity extends AppCompatActivity {
         btnChange.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(EditMyProfileActivity.this, ChangePasswordActivity.class));
+                Intent i = new Intent(EditMyProfileActivity.this, ChangePasswordActivity.class);
+                startActivityForResult(i,2);
             }
         });
         btnCancel.setOnClickListener(new View.OnClickListener() {
@@ -139,6 +148,10 @@ public class EditMyProfileActivity extends AppCompatActivity {
             }  catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+        if ((requestCode == 2)&&(resultCode == Activity.RESULT_OK)){
+            String newPass = data.getStringExtra("changed_pass");
+            edtPass.setText(newPass);
         }
     }
 }

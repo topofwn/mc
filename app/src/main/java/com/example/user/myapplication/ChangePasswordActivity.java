@@ -1,5 +1,6 @@
 package com.example.user.myapplication;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -35,10 +36,10 @@ public class ChangePasswordActivity extends AppCompatActivity {
                 s3 = edtConfirmPass.getText().toString();
                 if ((s2 == s3) && (s1 != s2)&& (s1 != s3))
                 {
-                    Intent intent = new Intent(ChangePasswordActivity.this,EditMyProfileActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putCharSequence("change Pass",s3);
-                    startActivity(intent);
+                  Intent intent = new Intent();
+                  intent.putExtra("changed_pass",s3);
+                  setResult(Activity.RESULT_OK,intent);
+                  finish();
                 }
                     else{
                     Toast.makeText(getApplicationContext()," Error when change password",Toast.LENGTH_SHORT).show();

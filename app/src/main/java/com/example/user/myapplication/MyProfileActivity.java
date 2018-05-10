@@ -1,5 +1,6 @@
 package com.example.user.myapplication;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,11 +9,12 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
 public class MyProfileActivity extends AppCompatActivity {
-
+   public TextView account_name,account_phone,account_password;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,11 +25,11 @@ public class MyProfileActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Account acc = (Account) intent.getSerializableExtra("account");
         String pass = (String) intent.getCharSequenceExtra("pass");
-        TextView account_name = (TextView) findViewById(R.id.txtAccountNamePE);
+         account_name = (TextView) findViewById(R.id.txtAccountNamePE);
         TextView account_type = (TextView) findViewById(R.id.txtTypePE);
-        TextView account_phone = (TextView) findViewById(R.id.txtPhonePE);
+         account_phone = (TextView) findViewById(R.id.txtPhonePE);
         TextView account_mail = (TextView) findViewById(R.id.txtEmailPE);
-        TextView account_password = (TextView) findViewById(R.id.txtPasswordPE);
+         account_password = (TextView) findViewById(R.id.txtPasswordPE);
         account_name.setText(acc.full_name);
         account_mail.setText(acc.email);
         account_type.setText(acc.user_type);
@@ -40,7 +42,7 @@ public class MyProfileActivity extends AppCompatActivity {
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("inform",acc);
                 bundle.putCharSequence("inform_pass",pass);
-                startActivity(i);
+                startActivityForResult(i,1);
             }
         });
        btnBack.setOnClickListener(new View.OnClickListener() {
@@ -49,5 +51,22 @@ public class MyProfileActivity extends AppCompatActivity {
                startActivity(new Intent(MyProfileActivity.this, activity_choose.class));
            }
        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == 1){
+            if (resultCode == Activity.RESULT_OK){
+                Account newProfile = new Account();
+                newProfile = (Account) data.getSerializableExtra("result");
+                account_name.setText(newProfile.full_name);
+                account_phone.setText(newProfile.phone_number);
+                  account_password.setText(data.getCharSequenceExtra("result_pass"));
+            }
+        }
+        if (resultCode == Activity.RESULT_CANCELED){
+            Toast.makeText(getApplicationContext(),"nothing change",Toast.LENGTH_SHORT).show();
+        }
     }
 }
