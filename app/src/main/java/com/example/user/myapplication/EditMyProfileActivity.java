@@ -17,12 +17,16 @@ import android.widget.Toast;
 
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.rx2androidnetworking.Rx2AndroidNetworking;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.Base64;
 
 import static com.example.user.myapplication.activity_registration.SECRET_KEY;
 import static com.example.user.myapplication.activity_registration.SERVER_URL;
@@ -30,15 +34,15 @@ import static com.example.user.myapplication.activity_registration.SERVER_URL;
 public class EditMyProfileActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST =71 ;
     private static final String TAG = "mc" ;
-    private Uri filePath =null;
+    public Uri filePath =null;
     private ImageButton ImgAvatar;
+    public   Account profile;
     public EditText edtPass;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent i = getIntent();
-        Bundle b = new Bundle();
-
+        Intent i = this.getIntent();
+        Bundle b = i.getExtras();
         setContentView(R.layout.activity_edit_my_profile);
         Button btnDone = (Button) findViewById(R.id.btnDone);
         Button btnChange = (Button) findViewById(R.id.btnChange);
@@ -47,26 +51,47 @@ public class EditMyProfileActivity extends AppCompatActivity {
         EditText edtPhone = (EditText) findViewById(R.id.edtPhoneP);
         EditText edtMail = (EditText) findViewById(R.id.edtEmailP);
         edtPass = (EditText) findViewById(R.id.edtPasswordP);
-        Account profile = (Account) i.getSerializableExtra("inform");
+        edtMail.setEnabled(false);
+        edtPass.setEnabled(false);
+       profile = (Account) b.getSerializable("inform");
         String s = (String) b.getCharSequence("inform_pass");
         edtName.setText(profile.full_name);
         edtPhone.setText(profile.phone_number);
         edtMail.setText(profile.email);
         edtPass.setText(s);
          ImgAvatar = (ImageButton)findViewById(R.id.ImgAvatar);
+         if (!profile.avatar.equals("")){
+//             try {
+//                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),Uri.parse(profile.avatar));
+//                 ImgAvatar.setImageBitmap(bitmap);
+//             } catch (IOException e) {
+//                 e.printStackTrace();
+//             }
+             Glide.with(this).load(Uri.parse(profile.avatar)).apply(RequestOptions.circleCropTransform()).into(ImgAvatar);
+         }
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent();
                 Account edit = profile;
                 edit.full_name = edtName.getText().toString();
                 edit.phone_number = edtPhone.getText().toString();
+                if (filePath != null){
+                    String temp = filePath.toString();
+
+                    try {
+                        edit.avatar = android.util.Base64.encodeToString(temp.getBytes("UTF-8"), android.util.Base64.DEFAULT);
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                }
                 EditProfileAsyncTask editprofileAsynctask = new EditProfileAsyncTask(EditMyProfileActivity.this);
                 editprofileAsynctask.execute(new Runnable() {
                     @Override
                     public void run() {
-                        Rx2AndroidNetworking.put(SERVER_URL + "/api/mcf/v1/drinker/"+String.valueOf(profile.id))
+                        Rx2AndroidNetworking.put(SERVER_URL + "/api/mcf/v1/drinker/"+String.valueOf(edit.id))
                                 .addApplicationJsonBody(edit)
-                               .addHeaders(new APIHeader(SecurityUtils.convertSha256(SECRET_KEY + profile.full_name +s )))
+                               .addHeaders(new APIHeader(edit.token))
                                 .build()
                                 .getAsJSONObject(new JSONObjectRequestListener() {
                                     @Override
@@ -76,19 +101,8 @@ public class EditMyProfileActivity extends AppCompatActivity {
                                             if (response.getInt("status") == 400){
                                                 Log.d(TAG,response.getString("message").toString());
                                             }else if (response.getInt("status") == 200){
-                                                JSONObject json = new JSONObject();
-                                                json = response.getJSONObject("data");
-                                                Account result =profile;
-                                                result.full_name = json.optString("full_name");
-                                                result.phone_number = json.optString("phone_number");
-                                                result.avatar = json.optString("avatar");
-                                                Intent returnIntent = new Intent();
-                                                Bundle bundle = new Bundle();
-                                                bundle.putSerializable("result",result);
-                                                bundle.putCharSequence("result_pass",edtPass.getText().toString());
-                                                i.putExtras(bundle);
-                                                setResult(Activity.RESULT_OK,returnIntent);
-                                                finish();
+                                            Toast.makeText(getApplicationContext(),"Updated",Toast.LENGTH_SHORT).show();
+
                                             }
                                         } catch (JSONException e) {
                                             e.printStackTrace();
@@ -108,13 +122,18 @@ public class EditMyProfileActivity extends AppCompatActivity {
                     }
 
                 });
+
+                intent.putExtra("result",edit);
+                intent.putExtra("result_pass",edtPass.getText().toString());
+                setResult(Activity.RESULT_OK,intent);
+                finish();
             }
         });
         btnChange.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(EditMyProfileActivity.this, ChangePasswordActivity.class);
-                startActivityForResult(i,2);
+                Intent intent = new Intent(EditMyProfileActivity.this, ChangePasswordActivity.class);
+                startActivityForResult(intent,2);
             }
         });
         btnCancel.setOnClickListener(new View.OnClickListener() {
@@ -132,26 +151,58 @@ public class EditMyProfileActivity extends AppCompatActivity {
     }
 
     private void ChooseImage() {
-        Intent i = new Intent();
-        i.setType("image/*");
-        i.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(i,"Select picture"),PICK_IMAGE_REQUEST);
+        Intent inte = new Intent();
+        inte.setType("image/*");
+        inte.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(inte,"Select picture"),PICK_IMAGE_REQUEST);
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data !=null &&data.getData()!=null){
             filePath = data.getData();
-            try{
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),filePath);
-                ImgAvatar.setImageBitmap(bitmap);
-            }  catch (IOException e) {
-                e.printStackTrace();
-            }
+//            try{
+//                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),filePath);
+//                ImgAvatar.setImageBitmap(bitmap);
+//            }  catch (IOException e) {
+//                e.printStackTrace();
+//            }
+            Glide.with(this).load(filePath).apply(RequestOptions.circleCropTransform()).into(ImgAvatar);
         }
         if ((requestCode == 2)&&(resultCode == Activity.RESULT_OK)){
-            String newPass = data.getStringExtra("changed_pass");
+            String curPass = data.getStringExtra("changed_pass1");
+            String newPass = data.getStringExtra("changed_pass2");
+            String confPass = data.getStringExtra("changed_pass3");
             edtPass.setText(newPass);
+            UpdatePassword upPass = new UpdatePassword();
+            upPass.user_type = profile.user_type;
+            upPass.current_password = curPass;
+            upPass.new_password = newPass;
+            upPass.confirm_password = confPass;
+            upPass.type = "CHANGE";
+            EditProfileAsyncTask editprofileAsynctask = new EditProfileAsyncTask(EditMyProfileActivity.this);
+            editprofileAsynctask.execute(new Runnable() {
+                @Override
+                public void run() {
+                    Rx2AndroidNetworking.put(SERVER_URL + "/api/mcf/v1/drinker/"+String.valueOf(profile.id))
+                                        .addApplicationJsonBody(upPass)
+                                        .addHeaders(new APIHeader(profile.token))
+                                        .build()
+                                        .getAsJSONObject(new JSONObjectRequestListener() {
+                                            @Override
+                                            public void onResponse(JSONObject response) {
+                                                Toast.makeText(getApplicationContext(),"Change password success",Toast.LENGTH_SHORT).show();
+                                            }
+
+                                            @Override
+                                            public void onError(ANError anError) {
+
+                                            }
+                                        });
+                }
+            });
+
+
         }
     }
 }

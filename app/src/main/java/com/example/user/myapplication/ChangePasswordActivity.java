@@ -34,13 +34,20 @@ public class ChangePasswordActivity extends AppCompatActivity {
                 s1 = edtCurPass.getText().toString();
                 s2 = edtNewPass.getText().toString();
                 s3 = edtConfirmPass.getText().toString();
-                if ((s2 == s3) && (s1 != s2)&& (s1 != s3))
-                {
-                  Intent intent = new Intent();
-                  intent.putExtra("changed_pass",s3);
-                  setResult(Activity.RESULT_OK,intent);
-                  finish();
+                if (s2.equals(s3)) {
+                    if (!s1.equals(s2)) {
+                        if (!s1.equals(s3))
+                        {
+                            Intent intent = new Intent();
+                            intent.putExtra("changed_pass1", s1);
+                            intent.putExtra("changed_pass2", s2);
+                            intent.putExtra("changed_pass3", s3);
+                            setResult(Activity.RESULT_OK, intent);
+                            finish();
+                        }
+                    }
                 }
+
                     else{
                     Toast.makeText(getApplicationContext()," Error when change password",Toast.LENGTH_SHORT).show();
                 }

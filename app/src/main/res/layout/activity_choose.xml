@@ -36,7 +36,7 @@
             <Button
                 android:id="@+id/btnRegistrationchoose"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_gravity="center"
                 android:background="#f30000"
                 android:padding="3dp"
@@ -48,7 +48,7 @@
             <Button
                 android:id="@+id/btnLoginchoose"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
