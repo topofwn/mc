@@ -1,6 +1,7 @@
 package com.example.user.myapplication;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -20,15 +21,11 @@ import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.rx2androidnetworking.Rx2AndroidNetworking;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.Base64;
-
-import static com.example.user.myapplication.activity_registration.SECRET_KEY;
+import android.util.Base64;
 import static com.example.user.myapplication.activity_registration.SERVER_URL;
 
 public class EditMyProfileActivity extends AppCompatActivity {
@@ -37,6 +34,7 @@ public class EditMyProfileActivity extends AppCompatActivity {
     public Uri filePath =null;
     private ImageButton ImgAvatar;
     public   Account profile;
+
     public EditText edtPass;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,19 +74,23 @@ public class EditMyProfileActivity extends AppCompatActivity {
                 Account edit = profile;
                 edit.full_name = edtName.getText().toString();
                 edit.phone_number = edtPhone.getText().toString();
-                if (filePath != null){
-                    String temp = filePath.toString();
-
-                    try {
-                        edit.avatar = android.util.Base64.encodeToString(temp.getBytes("UTF-8"), android.util.Base64.DEFAULT);
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
-                }
+                ProgressDialog dialog = ProgressDialog.show(EditMyProfileActivity.this,"","LOADING...",true);
                 EditProfileAsyncTask editprofileAsynctask = new EditProfileAsyncTask(EditMyProfileActivity.this);
                 editprofileAsynctask.execute(new Runnable() {
                     @Override
                     public void run() {
+                        if (filePath != null){
+                            Bitmap bitmap = null;
+                            try {
+                                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),filePath);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                            byte[] byteArray = baos.toByteArray();
+                            edit.avatar = Base64.encodeToString(byteArray,Base64.DEFAULT);
+                        }
                         Rx2AndroidNetworking.put(SERVER_URL + "/api/mcf/v1/drinker/"+String.valueOf(edit.id))
                                 .addApplicationJsonBody(edit)
                                .addHeaders(new APIHeader(edit.token))
@@ -107,9 +109,11 @@ public class EditMyProfileActivity extends AppCompatActivity {
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
+
                                     }
                                     @Override
                                     public void onError(ANError error) {
+
                                         if (error.getErrorCode() != 0) {
                                             Log.d(TAG, "onError errorCode : " + error.getErrorCode());
                                             Log.d(TAG, "onError errorBody : " + error.getErrorBody());
@@ -119,14 +123,19 @@ public class EditMyProfileActivity extends AppCompatActivity {
                                         }
                                     }
                                 });
+
                     }
+
 
                 });
 
-                intent.putExtra("result",edit);
-                intent.putExtra("result_pass",edtPass.getText().toString());
-                setResult(Activity.RESULT_OK,intent);
-                finish();
+                dialog.dismiss();
+                    intent.putExtra("result", edit);
+                    intent.putExtra("result_avatar", filePath.toString());
+                    intent.putExtra("result_pass", edtPass.getText().toString());
+                    setResult(Activity.RESULT_OK, intent);
+                    finish();
+
             }
         });
         btnChange.setOnClickListener(new View.OnClickListener() {
@@ -139,7 +148,7 @@ public class EditMyProfileActivity extends AppCompatActivity {
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(EditMyProfileActivity.this, activity_choose.class));
+                startActivity(new Intent(EditMyProfileActivity.this, MyProfileActivity.class));
             }
         });
         ImgAvatar.setOnClickListener(new View.OnClickListener() {
@@ -184,21 +193,20 @@ public class EditMyProfileActivity extends AppCompatActivity {
             editprofileAsynctask.execute(new Runnable() {
                 @Override
                 public void run() {
-                    Rx2AndroidNetworking.put(SERVER_URL + "/api/mcf/v1/drinker/"+String.valueOf(profile.id))
-                                        .addApplicationJsonBody(upPass)
-                                        .addHeaders(new APIHeader(profile.token))
-                                        .build()
-                                        .getAsJSONObject(new JSONObjectRequestListener() {
-                                            @Override
-                                            public void onResponse(JSONObject response) {
-                                                Toast.makeText(getApplicationContext(),"Change password success",Toast.LENGTH_SHORT).show();
-                                            }
+                    Rx2AndroidNetworking.put(SERVER_URL + "/api/mcf/v1/user/"+String.valueOf(profile.id)+"/change-password")
+                            .addApplicationJsonBody(upPass)
+                            .addHeaders(new APIHeader(profile.token))
+                            .build()
+                            .getAsJSONObject(new JSONObjectRequestListener() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    Toast.makeText(getApplicationContext(),"Change password success",Toast.LENGTH_SHORT).show();
+                                }
+                                @Override
+                                public void onError(ANError anError) {
 
-                                            @Override
-                                            public void onError(ANError anError) {
-
-                                            }
-                                        });
+                                }
+                            });
                 }
             });
 
