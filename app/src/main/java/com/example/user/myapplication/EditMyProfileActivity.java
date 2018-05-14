@@ -123,10 +123,7 @@ public class EditMyProfileActivity extends AppCompatActivity {
                                         }
                                     }
                                 });
-
                     }
-
-
                 });
 
                 dialog.dismiss();
